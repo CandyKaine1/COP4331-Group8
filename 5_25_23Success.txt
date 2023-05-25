@@ -1,0 +1,1 @@
+I gave everyone a username and pass, and hashed the passwords in the database. I also tested to see if the database returned successsful output and it does according to the Getting Started with LAMP word document.
