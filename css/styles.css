@@ -44,8 +44,8 @@ body
 {
     font-size: 30px;
     border-radius: 25px;
-    width: 50%;
-    margin-left: 25%;
+    width: 35%;
+    margin-left: 10%;
     font-family: 'Ubuntu', sans-serif;
 }
 
@@ -63,6 +63,20 @@ body
 {
 	font-size: 30px;
 }
+#firstName
+{
+    display: inline-block;
+    width: 80%;
+    margin-left: 10%;
+    text-align: center;
+}
+#lastName
+{
+    display: inline-block;
+    width: 80%;
+    margin-left: 10%;
+    text-align: center;
+}
 #searchText
 {
 	font-size: 30px;
@@ -70,6 +84,10 @@ body
 #colorText
 {
 	font-size: 30px;
+}
+#registerText
+{
+    font-size: 30px;
 }
 
 input[type="text"],input[type="password"]{
