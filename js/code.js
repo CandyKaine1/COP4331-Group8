@@ -1,4 +1,4 @@
-const urlBase = 'http://smallproject.site/LAMPAPI';
+const urlBase = 'http://COP4331-5.com/LAMPAPI';
 const extension = 'php';
 
 let userId = 0;
@@ -11,8 +11,8 @@ function doLogin()
 	firstName = "";
 	lastName = "";
 	
-	let login = document.getElementById("loginName").value;
-	let password = document.getElementById("loginPassword").value;
+	let login = document.getElementById("username").value;
+	let password = document.getElementById("password").value;
 //	var hash = md5( password );
 	
 	document.getElementById("loginResult").innerHTML = "";
@@ -212,7 +212,7 @@ function doRegister()
 
     let jsonPayload = JSON.stringify(tmp);
 
-    let url = urlBase + '/SignUp.' + extension;
+    let url = urlBase + '/Register.' + extension;
 
     let xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
@@ -247,6 +247,27 @@ function doRegister()
     }
 }
 
+function toggleRegister() {
+    var log = document.getElementById("login");
+    var reg = document.getElementById("signup");
+    var but = document.getElementById("btn");
+
+    log.style.left = "-400px";
+    reg.style.left = "0px";
+    but.style.left = "130px";
+}
+
+function toggleLogin() {
+
+    var log = document.getElementById("login");
+    var reg = document.getElementById("signup");
+    var but = document.getElementById("btn");
+
+    reg.style.left = "-400px";
+    log.style.left = "0px";
+    but.style.left = "0px";
+
+}
 
 function validSignUpForm(fName, lName, user, pass) { //Check each field to make sure a valid first name, last name, username, and password are included
 
