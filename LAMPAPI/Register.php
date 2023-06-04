@@ -21,6 +21,7 @@ else
 	if($row = $result->fetch_assoc())
 	{
 		$stmtValidation->close();
+		$conn->close();
 		existenceError("");
 	}
 	else
