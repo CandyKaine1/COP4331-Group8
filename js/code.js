@@ -13,13 +13,14 @@ function doLogin()
 	
 	let login = document.getElementById("username").value;
 	let password = document.getElementById("password").value;
-//	var hash = md5( password );
+	var hash = md5( password );
 	
 	document.getElementById("loginResult").innerHTML = "";
 
-	let tmp = {login:login,password:password};
-//	var tmp = {login:login,password:hash};
+//	let tmp = {login:login,password:password};
+	let tmp = {login:login,password:hash};
 	let jsonPayload = JSON.stringify( tmp );
+	console.log(hash);
 	
 	let url = urlBase + '/Login.' + extension;
 
@@ -207,7 +208,7 @@ function doRegister()
 		FirstName: firstName,
 		LastName: lastName,
 		Login: username,
-		Password: password
+		Password: hash
 	}
 
     let jsonPayload = JSON.stringify(tmp);
@@ -245,28 +246,6 @@ function doRegister()
     } catch (err) {
         document.getElementById("signupResult").innerHTML = err.message;
     }
-}
-
-function toggleRegister() {
-    var log = document.getElementById("login");
-    var reg = document.getElementById("signup");
-    var but = document.getElementById("btn");
-
-    log.style.left = "-400px";
-    reg.style.left = "0px";
-    but.style.left = "130px";
-}
-
-function toggleLogin() {
-
-    var log = document.getElementById("login");
-    var reg = document.getElementById("signup");
-    var but = document.getElementById("btn");
-
-    reg.style.left = "-400px";
-    log.style.left = "0px";
-    but.style.left = "0px";
-
 }
 
 function validSignUpForm(fName, lName, user, pass) { //Check each field to make sure a valid first name, last name, username, and password are included
