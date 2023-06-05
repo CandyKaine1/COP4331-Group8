@@ -248,6 +248,73 @@ function doRegister()
     }
 }
 
+function addContact() {
+
+    let name = document.getElementById("contactName").value;
+    let phonenumber = document.getElementById("contactPhone").value;
+    let emailaddress = document.getElementById("contactEmail").value;
+
+    if (!validAddContact(name, phone, email)) {
+        console.log("INVALID FIRST NAME, LAST NAME, PHONE, OR EMAIL SUBMITTED");
+        return;
+    }
+    let tmp = {
+        name: name,
+        phone: phonenumber,
+        email: emailaddress,
+        userID: userID
+    };
+
+
+    let jsonPayload = JSON.stringify(tmp);
+
+    let url = urlBase + '/AddContacts.' + extension;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try {
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log("Contact has been added");
+                // Clear input fields in form 
+                document.getElementById("addMe").reset();
+                // reload contacts table and switch view to show
+                loadContacts();
+                showTable();
+            }
+        };
+        xhr.send(jsonPayload);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+function searchContact() {
+	const content = document.getElementById("searchText");
+    const selections = content.value.toUpperCase().split(' ');
+    const table = document.getElementById("contacts");
+    const tr = table.getElementsByTagName("tr");// Table Row
+
+    for (let i = 0; i < tr.length; i++) {
+        const td = tr[i].getElementsByTagName("td")[0];// Table Data: Name
+
+        if (td) {
+            const txtValue = td.textContent || td.innerText;
+            tr[i].style.display = "none";
+
+            for (selection of selections) {
+                if (txtValue.toUpperCase().indexOf(selection) > -1) {
+                    tr[i].style.display = "";
+                }
+                if (txtValue_ln.toUpperCase().indexOf(selection) > -1) {
+                    tr[i].style.display = "";
+                }
+            }
+        }
+    }
+}
+
 function validSignUpForm(fName, lName, user, pass) { //Check each field to make sure a valid first name, last name, username, and password are included
 
 	//Booleans
@@ -315,4 +382,59 @@ function validSignUpForm(fName, lName, user, pass) { //Check each field to make 
     }
 
     return true;
+}
+
+function validAddContact(name, phone, email) {
+
+    var nameErr = phoneErr = emailErr = true;
+
+    if (name == "") {
+        console.log("FIRST NAME IS BLANK");
+    }
+    else {
+        console.log("first name IS VALID");
+        nameErr = false;
+    }
+
+    if (phone == "") {
+        console.log("PHONE IS BLANK");
+    }
+    else {
+        var regex = /^[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4}$/;
+
+        if (regex.test(phone) == false) {
+            console.log("PHONE IS NOT VALID");
+        }
+
+        else {
+
+            console.log("PHONE IS VALID");
+            phoneErr = false;
+        }
+    }
+
+    if (email == "") {
+        console.log("EMAIL IS BLANK");
+    }
+    else {
+        var regex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+
+        if (regex.test(email) == false) {
+            console.log("EMAIL IS NOT VALID");
+        }
+
+        else {
+
+            console.log("EMAIL IS VALID");
+            emailErr = false;
+        }
+    }
+
+    if ((phoneErr || emailErr || nameErr) == true) {
+        return false;
+
+    }
+
+    return true;
+
 }
