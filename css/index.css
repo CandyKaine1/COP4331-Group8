@@ -83,7 +83,18 @@ body
 {
     font-size: 30px;
 }
-
+#contactName
+{
+    font-size: 30px;
+}
+#contactPhone
+{
+    font-size: 30px;
+}
+#contactEmail
+{
+    font-size: 30px;
+}
 input[type="text"],input[type="password"]{
     border-radius: 25px;
     text-align: center;
