@@ -268,7 +268,7 @@ function addContact() {
 
     let jsonPayload = JSON.stringify(tmp);
 
-    let url = urlBase + '/AddContacts.' + extension;
+    let url = urlBase + '/AddContact.' + extension;
 
     let xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
