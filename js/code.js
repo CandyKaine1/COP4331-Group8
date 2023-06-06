@@ -110,82 +110,6 @@ function doLogout()
 	window.location.href = "index.html";
 }
 
-function addColor()
-{
-	let newColor = document.getElementById("colorText").value;
-	document.getElementById("colorAddResult").innerHTML = "";
-
-	let tmp = {color:newColor,userId,userId};
-	let jsonPayload = JSON.stringify( tmp );
-
-	let url = urlBase + '/AddColor.' + extension;
-	
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				document.getElementById("colorAddResult").innerHTML = "Color has been added";
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("colorAddResult").innerHTML = err.message;
-	}
-	
-}
-
-function searchColor()
-{
-	let srch = document.getElementById("searchText").value;
-	document.getElementById("colorSearchResult").innerHTML = "";
-	
-	let colorList = "";
-
-	let tmp = {search:srch,userId:userId};
-	let jsonPayload = JSON.stringify( tmp );
-
-	let url = urlBase + '/SearchColors.' + extension;
-	
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				document.getElementById("colorSearchResult").innerHTML = "Color(s) has been retrieved";
-				let jsonObject = JSON.parse( xhr.responseText );
-				
-				for( let i=0; i<jsonObject.results.length; i++ )
-				{
-					colorList += jsonObject.results[i];
-					if( i < jsonObject.results.length - 1 )
-					{
-						colorList += "<br />\r\n";
-					}
-				}
-				
-				document.getElementsByTagName("p")[0].innerHTML = colorList;
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("colorSearchResult").innerHTML = err.message;
-	}
-	
-}
-
 function doRegister()
 {
 	//Collect contact info
@@ -339,7 +263,7 @@ function edit_row(id) {
 function save_row(no) {
     var name_val = document.getElementById("name_text" + no).value;
     var phone_val = document.getElementById("phone_text" + no).value;
-    var id_val = ids[no]
+    var id_val = IDno[no]
 
     document.getElementById("first_Name" + no).innerHTML = name_val;
     document.getElementById("email" + no).innerHTML = email_val;
@@ -352,7 +276,7 @@ function save_row(no) {
         Name: name_val,
         Phone: phone_val,
         Email: email_val,
-        userID: id_val
+        ID: id_val
     };
 
     let jsonPayload = JSON.stringify(tmp);
@@ -455,14 +379,14 @@ function loadContacts() {
 
 function showTable() {
     //var x = document.getElementById("addMe");
-    var contacts = document.getElementById("contactsTable")
-    //if (x.style.display === "none") {
+    var contacts = document.getElementById("contactsTable");
+    //if (x.style.display === "none"){
     //    x.style.display = "block";
     //    contacts.style.display = "none";
     //} else {
     //    x.style.display = "none";
         contacts.style.display = "block";
-    }
+    
 }
 
 function validSignUpForm(fName, lName, user, pass) { //Check each field to make sure a valid first name, last name, username, and password are included
