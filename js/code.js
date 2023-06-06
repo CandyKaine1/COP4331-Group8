@@ -4,7 +4,8 @@ const extension = 'php';
 let userId = 0;
 let firstName = "";
 let lastName = "";
-
+const IDno = []
+ 
 function doLogin()
 {
 	userId = 0;
@@ -234,6 +235,11 @@ function doRegister()
             if (this.status == 200) {
 
                 let jsonObject = JSON.parse(xhr.responseText);
+
+		if(jsonObject.exists == "true"){
+                    document.getElementById("signupResult").innerHTML = "User already exists";
+                    return;
+                }
                 userId = jsonObject.id;
                 document.getElementById("signupResult").innerHTML = "User added";
                 firstName = jsonObject.firstName;
@@ -254,15 +260,15 @@ function addContact() {
     let phonenumber = document.getElementById("contactPhone").value;
     let emailaddress = document.getElementById("contactEmail").value;
 
-    if (!validAddContact(name, phone, email)) {
+    if (!validAddContact(name, phonenumber, emailaddress)) {
         console.log("INVALID FIRST NAME, LAST NAME, PHONE, OR EMAIL SUBMITTED");
         return;
     }
     let tmp = {
-        name: name,
-        phone: phonenumber,
-        email: emailaddress,
-        userID: userID
+        Name: name,
+        Phone: phonenumber,
+        Email: emailaddress,
+        UserID: userId
     };
 
 
@@ -278,11 +284,11 @@ function addContact() {
             if (this.readyState == 4 && this.status == 200) {
                 console.log("Contact has been added");
                 // Clear input fields in form 
-                document.getElementById("addMe").reset();
+                //document.getElementById("addMe").reset();
                 // reload contacts table and switch view to show
                 loadContacts();
                 showTable();
-                document.getElementById("colorAddResult").innerHTML = "Color has been added";
+                document.getElementById("colorAddResult").innerHTML = "Contact has been added";
             }
         };
         xhr.send(jsonPayload);
@@ -306,9 +312,6 @@ function searchContact() {
 
             for (selection of selections) {
                 if (txtValue.toUpperCase().indexOf(selection) > -1) {
-                    tr[i].style.display = "";
-                }
-                if (txtValue_ln.toUpperCase().indexOf(selection) > -1) {
                     tr[i].style.display = "";
                 }
             }
@@ -362,7 +365,7 @@ function save_row(no) {
     try {
         xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-                console.log("Contact has been updated");
+                console.log("Update Successul");
                 loadContacts();
             }
         };
@@ -374,7 +377,7 @@ function save_row(no) {
 
 function delete_row(no) {
     var name_val = document.getElementById("name" + no).innerText;
-    let check = confirm('Confirm deletion of contact: ' + name_val);
+    let check = confirm('Are you sure you want to delete this Contact?:' + name_val);
     if (check === true) {
         document.getElementById("row" + no + "").outerHTML = "";
         let tmp = {
@@ -384,7 +387,7 @@ function delete_row(no) {
 
         let jsonPayload = JSON.stringify(tmp);
 
-        let url = urlBase + '/DeleteContact.' + extension;
+        let url = urlBase + '/DeleteContacts.' + extension;
 
         let xhr = new XMLHttpRequest();
         xhr.open("POST", url, true);
@@ -429,7 +432,7 @@ function loadContacts() {
                 }
                 let text = "<table border='1'>"
                 for (let i = 0; i < jsonObject.results.length; i++) {
-                    ids[i] = jsonObject.results[i].ID
+                    IDno[i] = jsonObject.results[i].ID
                     text += "<tr id='row" + i + "'>"
                     text += "<td id='name" + i + "'><span>" + jsonObject.results[i].Name + "</span></td>";
                     text += "<td id='email" + i + "'><span>" + jsonObject.results[i].Email + "</span></td>";
@@ -451,13 +454,13 @@ function loadContacts() {
 }
 
 function showTable() {
-    var x = document.getElementById("addMe");
+    //var x = document.getElementById("addMe");
     var contacts = document.getElementById("contactsTable")
-    if (x.style.display === "none") {
-        x.style.display = "block";
-        contacts.style.display = "none";
-    } else {
-        x.style.display = "none";
+    //if (x.style.display === "none") {
+    //    x.style.display = "block";
+    //    contacts.style.display = "none";
+    //} else {
+    //    x.style.display = "none";
         contacts.style.display = "block";
     }
 }
@@ -496,7 +499,9 @@ function validSignUpForm(fName, lName, user, pass) { //Check each field to make 
         if (regex.test(user) == false) {
             console.log("USERNAME IS NOT VALID");
         }
-
+/*	else if(checkExistingUser(user) == true){
+		console.log("USERNAME ALREADY EXISTS");
+	}*/
         else {
 
             console.log("USERNAME IS VALID");
@@ -530,6 +535,38 @@ function validSignUpForm(fName, lName, user, pass) { //Check each field to make 
 
     return true;
 }
+
+
+   /* 
+function checkExistingUser(user) {
+    var url2 = 'http://smallproject.site/LAMPAPI/check_user_exists.';
+    var data = {
+        username: user
+    };
+
+    // Send an AJAX request to the PHP script
+    fetch( url2, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.text())
+    .then(response => {
+        if (response === 'exists') {
+            console.log('USER ALREADY EXISTS');
+            // Handle the case when the user already exists
+        } else {
+            console.log('USER DOES NOT EXIST, CREATING USER');
+            // Handle the case when the user does not exist
+        }
+    })
+    .catch(error => {
+        console.log('AJAX ERROR:', error);
+        // Handle the AJAX error
+    });
+}*/
 
 function validAddContact(name, phone, email) {
 
@@ -585,3 +622,5 @@ function validAddContact(name, phone, email) {
     return true;
 
 }
+
+
