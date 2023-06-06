@@ -1,10 +1,10 @@
 <?php
 $inData = getRequestInfo();
 
-$name = $inData["name"];
-$phone = $inData["phone"];
-$email = $inData["email"];
-$userID = $inData["userID"];
+$name = $inData["Name"];
+$phone = $inData["Phone"];
+$email = $inData["Email"];
+$userID = $inData["UserID"];
 
 
 $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
