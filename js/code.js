@@ -47,7 +47,7 @@ function doLogin()
 
 				saveCookie();
 	
-				window.location.href = "color.html";
+				window.location.href = "contact.html";
 			}
 		};
 		xhr.send(jsonPayload);
@@ -282,6 +282,7 @@ function addContact() {
                 // reload contacts table and switch view to show
                 loadContacts();
                 showTable();
+                document.getElementById("colorAddResult").innerHTML = "Color has been added";
             }
         };
         xhr.send(jsonPayload);
@@ -291,7 +292,7 @@ function addContact() {
 }
 
 function searchContact() {
-	const content = document.getElementById("searchText");
+	const content = document.getElementById("contactSearchText");
     const selections = content.value.toUpperCase().split(' ');
     const table = document.getElementById("contacts");
     const tr = table.getElementsByTagName("tr");// Table Row
@@ -312,6 +313,152 @@ function searchContact() {
                 }
             }
         }
+    }
+}
+
+function edit_row(id) {
+    document.getElementById("edit_button" + id).style.display = "none";
+    document.getElementById("save_button" + id).style.display = "inline-block";
+
+    var name1 = document.getElementById("name" + id);
+    var email = document.getElementById("email" + id);
+    var phone = document.getElementById("phone" + id);
+
+    var name_data = name1.innerText;
+    var email_data = email.innerText;
+    var phone_data = phone.innerText;
+
+    name1.innerHTML = "<input type='text' id='namef_text" + id + "' value='" + name_data + "'>";
+    email.innerHTML = "<input type='text' id='email_text" + id + "' value='" + email_data + "'>";
+    phone.innerHTML = "<input type='text' id='phone_text" + id + "' value='" + phone_data + "'>"
+}
+
+function save_row(no) {
+    var name_val = document.getElementById("name_text" + no).value;
+    var phone_val = document.getElementById("phone_text" + no).value;
+    var id_val = ids[no]
+
+    document.getElementById("first_Name" + no).innerHTML = name_val;
+    document.getElementById("email" + no).innerHTML = email_val;
+    document.getElementById("phone" + no).innerHTML = phone_val;
+
+    document.getElementById("edit_button" + no).style.display = "inline-block";
+    document.getElementById("save_button" + no).style.display = "none";
+
+    let tmp = {
+        Name: name_val,
+        Phone: phone_val,
+        Email: email_val,
+        userID: id_val
+    };
+
+    let jsonPayload = JSON.stringify(tmp);
+
+    let url = urlBase + '/UpdateContacts.' + extension;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try {
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log("Contact has been updated");
+                loadContacts();
+            }
+        };
+        xhr.send(jsonPayload);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+function delete_row(no) {
+    var name_val = document.getElementById("name" + no).innerText;
+    let check = confirm('Confirm deletion of contact: ' + name_val);
+    if (check === true) {
+        document.getElementById("row" + no + "").outerHTML = "";
+        let tmp = {
+            UserId: userId,
+            Name: name_val
+        };
+
+        let jsonPayload = JSON.stringify(tmp);
+
+        let url = urlBase + '/DeleteContact.' + extension;
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+        try {
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+
+                    console.log("Contact has been deleted");
+                    loadContacts();
+                }
+            };
+            xhr.send(jsonPayload);
+        } catch (err) {
+            console.log(err.message);
+        }
+
+    };
+
+}
+
+function loadContacts() {
+    let tmp = {
+        search: "",
+        userId: userId
+    };
+
+    let jsonPayload = JSON.stringify(tmp);
+
+    let url = urlBase + '/SearchContacts.' + extension;
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+    try {
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                let jsonObject = JSON.parse(xhr.responseText);
+                if (jsonObject.error) {
+                    console.log(jsonObject.error);
+                    return;
+                }
+                let text = "<table border='1'>"
+                for (let i = 0; i < jsonObject.results.length; i++) {
+                    ids[i] = jsonObject.results[i].ID
+                    text += "<tr id='row" + i + "'>"
+                    text += "<td id='name" + i + "'><span>" + jsonObject.results[i].Name + "</span></td>";
+                    text += "<td id='email" + i + "'><span>" + jsonObject.results[i].Email + "</span></td>";
+                    text += "<td id='phone" + i + "'><span>" + jsonObject.results[i].Phone + "</span></td>";
+                    text += "<td>" +
+                        "<button type='button' id='edit_button" + i + "' class='w3-button w3-circle w3-lime' onclick='edit_row(" + i + ")'>" + "<span class='glyphicon glyphicon-edit'></span>" + "</button>" +
+                        "<button type='button' id='save_button" + i + "' value='Save' class='w3-button w3-circle w3-lime' onclick='save_row(" + i + ")' style='display: none'>" + "<span class='glyphicon glyphicon-saved'></span>" + "</button>" +
+                        "<button type='button' onclick='delete_row(" + i + ")' class='w3-button w3-circle w3-amber'>" + "<span class='glyphicon glyphicon-trash'></span> " + "</button>" + "</td>";
+                    text += "<tr/>"
+                }
+                text += "</table>"
+                document.getElementById("tbody").innerHTML = text;
+            }
+        };
+        xhr.send(jsonPayload);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+function showTable() {
+    var x = document.getElementById("addMe");
+    var contacts = document.getElementById("contactsTable")
+    if (x.style.display === "none") {
+        x.style.display = "block";
+        contacts.style.display = "none";
+    } else {
+        x.style.display = "none";
+        contacts.style.display = "block";
     }
 }
 
