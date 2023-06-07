@@ -14,12 +14,26 @@ if ($conn->connect_error)
 }
 else
 {
-    $stmt = $conn->prepare("INSERT into Contacts (Name,Phone,Email,UserID) VALUES(?,?,?,?)");
-    $stmt->bind_param("ssss", $name, $phone, $email, $userID);
-    $stmt->execute();
-    $stmt->close();
-    $conn->close();
-    returnWithError("");
+	$stmtValidation = $conn->prepare("SELECT * FROM Contacts WHERE (Name = ? AND Email = ? AND Phone = ? AND UserID = ?)");
+	$stmtValidation->bind_param("ssss", $name, $email, $phone, $userID);
+	$stmtValidation->execute();
+	$result = $stmtValidation->get_result();
+	
+	if($row = $result->fetch_assoc())
+	{
+		$stmtValidation->close();
+		existenceError("true");
+	}
+	else
+	{
+		$stmtValidation->close();
+		$stmt = $conn->prepare("INSERT into Contacts (Name,Phone,Email,UserID) VALUES(?,?,?,?)");
+		$stmt->bind_param("ssss", $name, $phone, $email, $userID);
+		$stmt->execute();
+		$stmt->close();
+		$conn->close();
+		returnWithError("false");
+	}
 }
 
 function getRequestInfo()
@@ -33,9 +47,16 @@ function sendResultInfoAsJson( $obj )
     echo $obj;
 }
 
+function existenceError( $err )
+{
+    $retValue = '{"exists":"' . $err . '"}';
+
+    sendResultInfoAsJson( $retValue );
+}
+
 function returnWithError( $err )
 {
-    $retValue = '{"error":"' . $err . '"}';
+    $retValue = '{"exists":"' . $err . '"}';
     sendResultInfoAsJson( $retValue );
 }
 
