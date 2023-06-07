@@ -54,6 +54,20 @@ body
     color: #FFFFFF;
     opacity: 50%;
 }
+.smallButtons
+{
+    font-size: 12px;
+    border-radius: 25px;
+    width: 60%;
+    margin-left: 10%;
+    font-family: 'Ubuntu', sans-serif;
+    text-align: center;
+}
+.smallButtons:hover{
+    background-color: #00d5124f;
+    color: #FFFFFF;
+    opacity: 50%;
+}
 
 #loginName
 {
