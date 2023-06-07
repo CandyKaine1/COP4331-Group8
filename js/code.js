@@ -266,9 +266,9 @@ function save_row(no) {
     var email_val = document.getElementById("email_text" +no).value;
     var id_val = IDno[no];
 
-    document.getElementById("first_Name" + no).innerHTML = name_val;
-    document.getElementById("email" + no).innerHTML = email_val;
-    document.getElementById("phone" + no).innerHTML = phone_val;
+    document.getElementById("namef_text" + no).innerHTML = name_val;
+    document.getElementById("email_text" + no).innerHTML = email_val;
+    document.getElementById("phone_text" + no).innerHTML = phone_val;
 
     document.getElementById("edit_button" + no).style.display = "inline-block";
     document.getElementById("save_button" + no).style.display = "none";
