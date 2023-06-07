@@ -185,7 +185,8 @@ function addContact() {
     let emailaddress = document.getElementById("contactEmail").value;
 
     if (!validAddContact(name, phonenumber, emailaddress)) {
-        console.log("INVALID FIRST NAME, LAST NAME, PHONE, OR EMAIL SUBMITTED");
+        console.log("INVALID NAME, PHONE, OR EMAIL SUBMITTED");
+        document.getElementById("colorAddResult").innerHTML = "Invalid name, phone, or email submitted";
         return;
     }
     let tmp = {
