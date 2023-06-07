@@ -263,7 +263,7 @@ function edit_row(id) {
 function save_row(no) {
     var name_val = document.getElementById("name_text" + no).value;
     var phone_val = document.getElementById("phone_text" + no).value;
-    var id_val = IDno[no]
+    var id_val = IDno[no];
 
     document.getElementById("first_Name" + no).innerHTML = name_val;
     document.getElementById("email" + no).innerHTML = email_val;
@@ -305,7 +305,7 @@ function delete_row(no) {
     if (check === true) {
         document.getElementById("row" + no + "").outerHTML = "";
         let tmp = {
-            UserId: userId,
+            UserID: userId,
             Name: name_val
         };
 
@@ -336,7 +336,7 @@ function delete_row(no) {
 function loadContacts() {
     let tmp = {
         search: "",
-        userId: userId
+        UserID: userId
     };
 
     let jsonPayload = JSON.stringify(tmp);
@@ -459,38 +459,6 @@ function validSignUpForm(fName, lName, user, pass) { //Check each field to make 
 
     return true;
 }
-
-
-   /* 
-function checkExistingUser(user) {
-    var url2 = 'http://smallproject.site/LAMPAPI/check_user_exists.';
-    var data = {
-        username: user
-    };
-
-    // Send an AJAX request to the PHP script
-    fetch( url2, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.text())
-    .then(response => {
-        if (response === 'exists') {
-            console.log('USER ALREADY EXISTS');
-            // Handle the case when the user already exists
-        } else {
-            console.log('USER DOES NOT EXIST, CREATING USER');
-            // Handle the case when the user does not exist
-        }
-    })
-    .catch(error => {
-        console.log('AJAX ERROR:', error);
-        // Handle the AJAX error
-    });
-}*/
 
 function validAddContact(name, phone, email) {
 
