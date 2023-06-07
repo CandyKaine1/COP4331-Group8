@@ -5,136 +5,120 @@ let userId = 0;
 let firstName = "";
 let lastName = "";
 const IDno = []
- 
-function doLogin()
-{
-	userId = 0;
-	firstName = "";
-	lastName = "";
-	
-	let login = document.getElementById("username").value;
-	let password = document.getElementById("password").value;
-	var hash = md5( password );
-	
-	document.getElementById("loginResult").innerHTML = "";
 
-//	let tmp = {login:login,password:password};
-	let tmp = {login:login,password:hash};
-	let jsonPayload = JSON.stringify( tmp );
-	console.log(hash);
-	
-	let url = urlBase + '/Login.' + extension;
+function doLogin() {
+    userId = 0;
+    firstName = "";
+    lastName = "";
 
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				let jsonObject = JSON.parse( xhr.responseText );
-				userId = jsonObject.id;
-		
-				if( userId < 1 )
-				{		
-					document.getElementById("loginResult").innerHTML = "User/Password combination incorrect";
-					return;
-				}
-		
-				firstName = jsonObject.firstName;
-				lastName = jsonObject.lastName;
+    let login = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
+    var hash = md5(password);
 
-				saveCookie();
-	
-				window.location.href = "color.html";
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("loginResult").innerHTML = err.message;
-	}
+    document.getElementById("loginResult").innerHTML = "";
+
+    //	let tmp = {login:login,password:password};
+    let tmp = { login: login, password: hash };
+    let jsonPayload = JSON.stringify(tmp);
+    console.log(hash);
+
+    let url = urlBase + '/Login.' + extension;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try {
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                let jsonObject = JSON.parse(xhr.responseText);
+                userId = jsonObject.id;
+
+                if (userId < 1) {
+                    document.getElementById("loginResult").innerHTML = "User/Password combination incorrect";
+                    return;
+                }
+
+                firstName = jsonObject.firstName;
+                lastName = jsonObject.lastName;
+
+                saveCookie();
+
+                window.location.href = "color.html";
+            }
+        };
+        xhr.send(jsonPayload);
+    }
+    catch (err) {
+        document.getElementById("loginResult").innerHTML = err.message;
+    }
 
 }
 
-function saveCookie()
-{
-	let minutes = 20;
-	let date = new Date();
-	date.setTime(date.getTime()+(minutes*60*1000));	
-	document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ";expires=" + date.toGMTString();
+function saveCookie() {
+    let minutes = 20;
+    let date = new Date();
+    date.setTime(date.getTime() + (minutes * 60 * 1000));
+    document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ";expires=" + date.toGMTString();
 }
 
-function readCookie()
-{
-	userId = -1;
-	let data = document.cookie;
-	let splits = data.split(",");
-	for(var i = 0; i < splits.length; i++) 
-	{
-		let thisOne = splits[i].trim();
-		let tokens = thisOne.split("=");
-		if( tokens[0] == "firstName" )
-		{
-			firstName = tokens[1];
-		}
-		else if( tokens[0] == "lastName" )
-		{
-			lastName = tokens[1];
-		}
-		else if( tokens[0] == "userId" )
-		{
-			userId = parseInt( tokens[1].trim() );
-		}
-	}
-	
-	if( userId < 0 )
-	{
-		window.location.href = "index.html";
-	}
-	else
-	{
-		document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
-	}
+function readCookie() {
+    userId = -1;
+    let data = document.cookie;
+    let splits = data.split(",");
+    for (var i = 0; i < splits.length; i++) {
+        let thisOne = splits[i].trim();
+        let tokens = thisOne.split("=");
+        if (tokens[0] == "firstName") {
+            firstName = tokens[1];
+        }
+        else if (tokens[0] == "lastName") {
+            lastName = tokens[1];
+        }
+        else if (tokens[0] == "userId") {
+            userId = parseInt(tokens[1].trim());
+        }
+    }
+
+    if (userId < 0) {
+        window.location.href = "index.html";
+    }
+    else {
+        document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
+    }
 }
 
-function doLogout()
-{
-	userId = 0;
-	firstName = "";
-	lastName = "";
-	document.cookie = "firstName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
-	window.location.href = "index.html";
+function doLogout() {
+    userId = 0;
+    firstName = "";
+    lastName = "";
+    document.cookie = "firstName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+    window.location.href = "index.html";
 }
 
-function doRegister()
-{
-	//Collect contact info
-	firstName = document.getElementById("firstName").value;
-	lastName = document.getElementById("lastName").value;
-	//Get username and password
-	let username = document.getElementById("username").value;
+function doRegister() {
+    //Collect contact info
+    firstName = document.getElementById("firstName").value;
+    lastName = document.getElementById("lastName").value;
+    //Get username and password
+    let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
 
-	if(!validSignUpForm(firstName, lastName, username, password)){
-		document.getElementById("signupResult").innerHTML = "invalid signup";
-		return;
-	}
+    if (!validSignUpForm(firstName, lastName, username, password)) {
+        document.getElementById("signupResult").innerHTML = "invalid signup";
+        return;
+    }
 
-	var hash = md5(password);
+    var hash = md5(password);
 
-	
-	document.getElementById("signupResult").innerHTML = "";
 
-	let tmp = {
-		FirstName: firstName,
-		LastName: lastName,
-		Login: username,
-		Password: hash
-	}
+    document.getElementById("signupResult").innerHTML = "";
+
+    let tmp = {
+        FirstName: firstName,
+        LastName: lastName,
+        Login: username,
+        Password: hash
+    }
 
     let jsonPayload = JSON.stringify(tmp);
 
@@ -160,7 +144,7 @@ function doRegister()
 
                 let jsonObject = JSON.parse(xhr.responseText);
 
-		if(jsonObject.exists == "true"){
+                if (jsonObject.exists == "true") {
                     document.getElementById("signupResult").innerHTML = "User already exists";
                     return;
                 }
@@ -189,6 +173,7 @@ function addContact() {
         document.getElementById("colorAddResult").innerHTML = "Invalid name, phone, or email submitted";
         return;
     }
+
     let tmp = {
         Name: name,
         Phone: phonenumber,
@@ -206,11 +191,13 @@ function addContact() {
     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
     try {
         xhr.onreadystatechange = function () {
+            let jsonObject = JSON.parse(xhr.responseText);
             if (this.readyState == 4 && this.status == 200) {
+                if (jsonObject.exists == "true") {
+                    document.getElementById("colorAddResult").innerHTML = "Contact already exists";
+                    return;
+                }
                 console.log("Contact has been added");
-                // Clear input fields in form 
-                //document.getElementById("addMe").reset();
-                // reload contacts table and switch view to show
                 loadContacts();
                 showTable();
                 document.getElementById("colorAddResult").innerHTML = "Contact has been added";
@@ -223,7 +210,7 @@ function addContact() {
 }
 
 function searchContact() {
-	const content = document.getElementById("contactSearchText");
+    const content = document.getElementById("contactSearchText");
     const selections = content.value.toUpperCase().split(' ');
     const table = document.getElementById("contacts");
     const tr = table.getElementsByTagName("tr");// Table Row
@@ -264,7 +251,7 @@ function edit_row(id) {
 function save_row(no) {
     var name_val = document.getElementById("namef_text" + no).value;
     var phone_val = document.getElementById("phone_text" + no).value;
-    var email_val = document.getElementById("email_text" +no).value;
+    var email_val = document.getElementById("email_text" + no).value;
     var id_val = IDno[no];
 
     document.getElementById("namef_text" + no).innerHTML = name_val;
@@ -292,6 +279,7 @@ function save_row(no) {
         xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 console.log("Update Successul");
+                document.getElementById("colorAddResult").innerHTML = "Contact updated";
                 loadContacts();
             }
         };
@@ -303,12 +291,16 @@ function save_row(no) {
 
 function delete_row(no) {
     var name_val = document.getElementById("name" + no).innerText;
+    var phone_val = document.getElementById("phone" + no).innerText;
+    var email_val = document.getElementById("email" + no).innerText;
     let check = confirm('Are you sure you want to delete this Contact?:' + name_val);
     if (check === true) {
         document.getElementById("row" + no + "").outerHTML = "";
         let tmp = {
             UserID: userId,
-            Name: name_val
+            Name: name_val,
+            Phone: phone_val,
+            Email: email_val
         };
 
         let jsonPayload = JSON.stringify(tmp);
@@ -323,6 +315,7 @@ function delete_row(no) {
                 if (this.readyState == 4 && this.status == 200) {
 
                     console.log("Contact has been deleted");
+                    document.getElementById("colorAddResult").innerHTML = "Contact deleted";
                     loadContacts();
                 }
             };
@@ -387,16 +380,16 @@ function showTable() {
     //    contacts.style.display = "none";
     //} else {
     //    x.style.display = "none";
-        contacts.style.display = "block";
-    
+    contacts.style.display = "block";
+
 }
 
 function validSignUpForm(fName, lName, user, pass) { //Check each field to make sure a valid first name, last name, username, and password are included
 
-	//Booleans
+    //Booleans
     var fNameErr = lNameErr = userErr = passErr = true;
 
-	//First name checks
+    //First name checks
     if (fName == "") {
         console.log("FIRST NAME IS BLANK");
     }
@@ -405,7 +398,7 @@ function validSignUpForm(fName, lName, user, pass) { //Check each field to make 
         fNameErr = false;
     }
 
-	//Last name checks
+    //Last name checks
     if (lName == "") {
         console.log("LAST NAME IS BLANK");
     }
@@ -414,20 +407,20 @@ function validSignUpForm(fName, lName, user, pass) { //Check each field to make 
         lNameErr = false;
     }
 
-	//Username checks
+    //Username checks
     if (user == "") {
         console.log("USERNAME IS BLANK");
     }
     else {
-		//Regulate characters in username
+        //Regulate characters in username
         var regex = /(?=.*[a-zA-Z])([a-zA-Z0-9-_]).{3,18}$/;
 
         if (regex.test(user) == false) {
             console.log("USERNAME IS NOT VALID");
         }
-/*	else if(checkExistingUser(user) == true){
-		console.log("USERNAME ALREADY EXISTS");
-	}*/
+        /*	else if(checkExistingUser(user) == true){
+                console.log("USERNAME ALREADY EXISTS");
+            }*/
         else {
 
             console.log("USERNAME IS VALID");
@@ -435,12 +428,12 @@ function validSignUpForm(fName, lName, user, pass) { //Check each field to make 
         }
     }
 
-	//Password checks
+    //Password checks
     if (pass == "") {
         console.log("PASSWORD IS BLANK");
     }
     else {
-		//Requirements for password
+        //Requirements for password
         var regex = /(?=.*\d)(?=.*[A-Za-z])(?=.*[!@#$%^&*]).{8,32}/;
 
         if (regex.test(pass) == false) {
