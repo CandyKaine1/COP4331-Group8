@@ -261,8 +261,9 @@ function edit_row(id) {
 }
 
 function save_row(no) {
-    var name_val = document.getElementById("name_text" + no).value;
+    var name_val = document.getElementById("namef_text" + no).value;
     var phone_val = document.getElementById("phone_text" + no).value;
+    var email_val = document.getElementById("email_text" +no).value;
     var id_val = IDno[no];
 
     document.getElementById("first_Name" + no).innerHTML = name_val;
